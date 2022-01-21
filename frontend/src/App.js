@@ -1,23 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
 
 function App() {
+  const [tasks, setTasks] = useState([]);
+  const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    fetch("http://localhost:3001/")
+      .then((res) => res.json())
+      .then((res) => setTasks(res));
+  }, []);
+
+  const addToList = async (e) => {
+    e.preventDefault();
+    fetch("http://localhost:3001/", { method: "POST", body: JSON.stringify({ description }), headers: { "Content-Type": "application/json" } })
+      .then((res) => res.json())
+      .then((res) => setTasks([...tasks, { id: res.id, description }]));
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h3>Beleznica nalog</h3>
+      <form onSubmit={addToList}>
+        <label>Vpisi opis naloge:</label>
+        <br />
+        <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
+        <input type="submit" value="Dodaj" />
+      </form>
+      <div>
+        {tasks.map((task) => (
+          <div key={task.id}>{task.description}</div>
+        ))}
+      </div>
     </div>
   );
 }
