@@ -1,10 +1,18 @@
 const express = require("express");
-const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
+const mysql = require("mysql");
 
 const app = express();
+
+const connection = mysql.createPool({
+  connectionLimit: 2,
+  host: "db",
+  user: "template",
+  password: "secret",
+  database: "todo",
+});
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -12,36 +20,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
 
-let tasks = [
-  {
-    id: 0,
-    description: "pojej juho",
-  },
-  {
-    id: 1,
-    description: "nahrani hrcka",
-  },
-  {
-    id: 2,
-    description: "umij racunalnik",
-  },
-  {
-    id: 3,
-    description: "skuhaj banano",
-  },
-];
-
 app.get("/", function (req, res, next) {
-  res.json(tasks);
+  connection.query("SELECT * from tasks;", function (error, results, fields) {
+    if (error) throw error;
+    res.json(results);
+  });
 });
 
 app.post("/", function (req, res, next) {
-  const newTask = {
-    id: tasks[tasks.length - 1].id + 1,
-    description: req.body.description,
-  };
-  tasks = [...tasks, newTask];
-  res.json({ id: newTask.id });
+  connection.query(`INSERT INTO tasks (description) VALUES ('${req.body.description}')`, function (error, result, fields) {
+    if (error) throw error;
+    res.json({ id: result.insertId });
+  });
 });
 
 module.exports = app;
