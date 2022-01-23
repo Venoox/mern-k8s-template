@@ -8,10 +8,10 @@ const app = express();
 
 const connection = mysql.createPool({
   connectionLimit: 2,
-  host: "mysql-service.default.svc.cluster.local",
-  user: "template",
-  password: "secret",
-  database: "todo",
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
 });
 
 if (app.get("env") === "production") {
