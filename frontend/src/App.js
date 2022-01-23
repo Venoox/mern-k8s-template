@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 
+const development = !process.env.NODE_ENV || process.env.NODE_ENV === "development";
+const API_URL = development ? "http://localhost:3001" : "http://k8s.tomazcuk.me";
+
 function App() {
   const [tasks, setTasks] = useState([]);
   const [description, setDescription] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:3001/")
+    fetch(`${API_URL}/api`)
       .then((res) => res.json())
       .then((res) => setTasks(res));
   }, []);
 
   const addToList = async (e) => {
     e.preventDefault();
-    fetch("http://localhost:3001/", { method: "POST", body: JSON.stringify({ description }), headers: { "Content-Type": "application/json" } })
+    fetch(`${API_URL}/api`, { method: "POST", body: JSON.stringify({ description }), headers: { "Content-Type": "application/json" } })
       .then((res) => res.json())
       .then((res) => setTasks([...tasks, { id: res.id, description }]));
   };
