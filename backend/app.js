@@ -27,14 +27,20 @@ app.use(cors());
 
 app.get("/", function (req, res, next) {
   connection.query("SELECT * from tasks;", function (error, results, fields) {
-    if (error) return next(error);
+    if (error) {
+      console.log(error);
+      return next(error);
+    }
     res.json(results);
   });
 });
 
 app.post("/", function (req, res, next) {
   connection.query(`INSERT INTO tasks (description) VALUES ('${req.body.description}')`, function (error, result, fields) {
-    if (error) return next(error);
+    if (error) {
+      console.log(error);
+      return next(error);
+    }
     res.json({ id: result.insertId });
   });
 });
@@ -44,8 +50,12 @@ app.get("/live", function (req, res, next) {
 });
 
 app.get("/ready", function (req, res, next) {
+  console.log(process.env.MYSQL_HOST);
   connection.getConnection((err, conn) => {
-    if (err) return res.status(500).send();
+    if (err) {
+      console.log(err);
+      return res.status(500).send();
+    }
     return res.send("I'm ready to receive traffic!");
   });
 });
