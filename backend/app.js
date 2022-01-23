@@ -8,7 +8,7 @@ const app = express();
 
 const connection = mysql.createPool({
   connectionLimit: 2,
-  host: "db",
+  host: "frontend-service.default.svc.cluster.local",
   user: "template",
   password: "secret",
   database: "todo",
