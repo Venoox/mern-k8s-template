@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db
+data:
+  MYSQL_HOST: "mysql-service.default.svc.cluster.local"
+  MYSQL_USER: "template"
+  MYSQL_PASSWORD: "secret"
+  MYSQL_DATABASE: "todo"
+  MYSQL_RANDOM_ROOT_PASSWORD: "true"

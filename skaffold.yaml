@@ -1,0 +1,23 @@
+apiVersion: skaffold/v2beta26
+kind: Config
+metadata:
+  name: mern-k-s-template
+build:
+  artifacts:
+  - image: ghcr.io/venoox/mern-k8s-template/api
+    context: backend
+    docker:
+      dockerfile: Dockerfile
+  - image: ghcr.io/venoox/mern-k8s-template/app
+    context: frontend
+    docker:
+      dockerfile: Dockerfile
+deploy:
+  kubectl:
+    manifests:
+    - api.yml
+    - app.yml
+    - db-config.yml
+    - db.yml
+    - ingress.yml
+    - mysql-pv.yml

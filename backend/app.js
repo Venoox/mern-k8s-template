@@ -50,8 +50,7 @@ app.get("/live", function (req, res, next) {
 });
 
 app.get("/ready", function (req, res, next) {
-  console.log(process.env.MYSQL_HOST);
-  connection.getConnection((err, conn) => {
+  connection.query("SELECT 1+1;", (err) => {
     if (err) {
       console.log(err);
       return res.status(500).send();

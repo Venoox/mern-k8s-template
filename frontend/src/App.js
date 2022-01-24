@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 
 const development = !process.env.NODE_ENV || process.env.NODE_ENV === "development";
-const API_URL = development ? "http://localhost:3001" : "http://k8s.tomazcuk.me";
+const API_URL = development ? "http://localhost:3001" : "";
 
 function App() {
   const [tasks, setTasks] = useState([]);
